@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import UserStack from "./src/navigation/UserStack";
+import Login from "./src/screens/Login";
+// import { useFonts } from "expo-font";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+function App() {
+  // let [fontsLoaded] = useFonts({
+  //   "Poopins-Black": require("./assets/fonts/Poppins-Black.ttf"),
+  //   "Poopins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+  //   "Poopins-Light": require("./assets/fonts/Poppins-Light.ttf"),
+  //   "Poopins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
+  //   "Poopins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
+  //   "Poopins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
+  //   "Poopins-Thin": require("./assets/fonts/Poppins-Thin.ttf"),
+  // });
+  const isAuth = true;
+
+  return isAuth ? <UserStack /> : <Login />;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
