@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, Image } from "react-native";
 import Avatar from "../../../components/atoms/Avatar";
+import { useGetCoalitionQuery } from "../../../Redux/api/apiSlice";
+
 
 const ColitionImageUrl =
   "https://cdn.intra.42.fr/coalition/cover/76/Commodore_BG.jpg";
 
-const ColitionImage = () => {
+const ColitionImage = (props) => {
+  const { image } = props;
   return (
     <Image
-      source={{ uri: ColitionImageUrl }}
+      source={image}
       style={{
         flex: 1,
         objectFit: "cover",
@@ -25,12 +28,16 @@ const addZero = (number) => {
   return number < 10 ? `${number}0` : `${number}`;
 };
 
-const UserInformations = () => {
+const UserInformations = (props) => {
+  const {data} = props;
+  const {data: coalitionData, isLoading: coalitionDataLoading} = useGetCoalitionQuery(data.id);
+
+  console.log("coalitionData", coalitionData[0].image_url, ", coalitionDataLoading", coalitionDataLoading);
   const [selectedCursus, setSelectedCursus] = useState("42Cursus");
   const cursusElements = [
     {
       label: "Wallet",
-      value: "65 ₳",
+      value: `${data?.wallet} ₳`,
     },
     {
       label: "Cursus",
@@ -38,7 +45,7 @@ const UserInformations = () => {
     },
     {
       label: "Evaluation points",
-      value: "5",
+      value: `${data?.correction_point}`,
     },
     {
       label: "Grade",
@@ -49,23 +56,23 @@ const UserInformations = () => {
   const LevelPercent = `${Level}`.split(".")[1]
     ? addZero(+`${Level}`.split(".")[1])
     : 0;
-  const city = "Khouribga";
   return (
     <View style={PUBLIC_PROFILE_USER_STYLE}>
-      <ColitionImage />
+      {!coalitionDataLoading && <ColitionImage image={{uri: coalitionData[0].cover_url}} />}
       <Avatar
-        firstName="Achraf"
-        lastName="Bettachi"
+        firstName={data?.displayname.split(" ")[0]}
+        lastName={data?.displayname.split(" ")[1]}
+        image={{uri: data?.image_url}}
         style={{ width: 125, height: 125, marginTop: 20 }}
       />
       <View style={NAME_CONTAINER_STYLE}>
-        <Text style={FULLNAME_STYLE}>Achraf Bettachi</Text>
-        <Text style={LOGIN_STYLE}>abettach</Text>
+        <Text style={FULLNAME_STYLE}>{data?.displayname}</Text>
+        <Text style={LOGIN_STYLE}>{data?.login}</Text>
       </View>
       <View style={ELEMENT_CONTAINER_STYLE}>
-        {cursusElements.map((element) => {
+        {cursusElements.map((element, index) => {
           return (
-            <View style={ELEMENT_CHILD_CONTAINER_STYLE}>
+            <View style={ELEMENT_CHILD_CONTAINER_STYLE} key={index}>
               <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.label}</Text>
               <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.value}</Text>
             </View>
@@ -80,7 +87,7 @@ const UserInformations = () => {
         }}
       >
         <Text style={[ELEMENT_CHILD_TEXT_STYLE, { marginTop: 40 }]}>
-          abettach@1337student.ma
+          {data?.email}
         </Text>
         <View style={PROGRESSIVE_BAR_STYLE}>
           <View
@@ -89,7 +96,7 @@ const UserInformations = () => {
           <Text style={[LEVEL_TEXT_STYLE]}>{`${Level} %`}</Text>
         </View>
         <Text style={[ELEMENT_CHILD_TEXT_STYLE, { marginTop: 15 }]}>
-          {city}
+          {data?.campus}
         </Text>
       </View>
     </View>

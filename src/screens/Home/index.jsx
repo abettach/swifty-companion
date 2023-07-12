@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Image, TextInput, Pressable } from "react-native";
 import AppBackgorund from "../../assets/images/app-background.png";
 import { SearchIcon } from "../../components/icons";
@@ -7,7 +7,10 @@ import SearchBar from "../../components/moleculs/SearchBar";
 import Avatar from "../../components/atoms/Avatar";
 import User from "../../assets/images/User.png";
 import UsersCard from "../../components/moleculs/UsersCard";
+import { useSelector } from "react-redux";
+import { useGetConnetedUserQuery } from "../../Redux/api/apiSlice";
 const BackroundImage = () => {
+
   return (
     <Image
       source={AppBackgorund}
@@ -41,6 +44,8 @@ const Data = [
   },
 ];
 const Home = (props) => {
+  const authData = useSelector((state) => state.auth);
+
   const onChange = (text) => {
     console.log("im in on change");
     console.log(text);

@@ -59,7 +59,7 @@ const ProjectsCards = () => {
               justifyContent: "center",
               marginBottom: index === projects.length - 1 ? 20 : 0,
             }}
-            key={index}
+            key={Math.random() * 10}
           >
             <View
               style={[

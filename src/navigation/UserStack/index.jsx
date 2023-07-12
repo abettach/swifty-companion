@@ -10,6 +10,7 @@ import StaticString from "../../utils/staticStrings.json";
 import { FONT_FAMILY, FONT_SIZE, COLORS } from "../../app.style";
 import { createStackNavigator } from "@react-navigation/stack";
 import PublicProfile from "../../screens/PublicProfile";
+import Login from "../../screens/Login";
 
 const Tab = createBottomTabNavigator();
 
@@ -86,6 +87,19 @@ const UserStack = () => {
   );
 };
 
+export const AuthStack = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 export default UserStack;
 
 const TAB_BAR_STYLE = {

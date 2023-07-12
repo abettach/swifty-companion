@@ -1,21 +1,21 @@
 import React from "react";
 import UserStack from "./src/navigation/UserStack";
 import Login from "./src/screens/Login";
-// import { useFonts } from "expo-font";
+import { store } from "./src/Redux/store";
+import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
+import { AuthStack } from "./src/navigation/UserStack";
+import AppStack from "./src/utils/appStack";
 
 function App() {
-  // let [fontsLoaded] = useFonts({
-  //   "Poopins-Black": require("./assets/fonts/Poppins-Black.ttf"),
-  //   "Poopins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-  //   "Poopins-Light": require("./assets/fonts/Poppins-Light.ttf"),
-  //   "Poopins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
-  //   "Poopins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
-  //   "Poopins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
-  //   "Poopins-Thin": require("./assets/fonts/Poppins-Thin.ttf"),
-  // });
-  const isAuth = true;
+  const isAuth = false;
 
-  return isAuth ? <UserStack /> : <Login />;
+
+  return (
+    <Provider store={store}>
+      <AppStack />
+    </Provider>
+  );
 }
 
 export default App;
