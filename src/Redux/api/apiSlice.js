@@ -5,7 +5,6 @@ const baseQuery = fetchBaseQuery({
   baseUrl: `https://api.intra.42.fr`,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    console.log("getState==>", getState().auth)
     const token = getState().auth.accessToken;
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
@@ -38,7 +37,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 };
 
 const UserDataReponseTransform = (response) => {
-  // console.log("response ==>", response)
+  console.log("response ==>", response.id);
   const filtredData = {
     id: response.id,
     campus: response.campus,
@@ -53,7 +52,6 @@ const UserDataReponseTransform = (response) => {
     skills: response.skills,
     campus: response.campus[0].name,
   }
-  console.log("filtredData ==>", filtredData)
   return filtredData;
 };
 
@@ -67,7 +65,6 @@ export const apiSlice = createApi({
         method: "POST",
       }),
       transformResponse: (response) => {
-        console.log("response ==>", response);
         const { access_token, refresh_token } = response;
         return { access_token, refresh_token };
       },

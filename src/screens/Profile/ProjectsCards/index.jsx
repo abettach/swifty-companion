@@ -1,53 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
-const ProjectsCards = () => {
-  const projects = [
-    {
-      name: "Libft",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "Get_Next_Line",
-      status: "failed",
-      grade: "100%",
-    },
-    {
-      name: "Printf",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-  ];
+const ProjectsCards = (props) => {
+  const { projects } = props;
+
   return (
     <>
       {projects.map((project, index) => {
@@ -66,17 +21,19 @@ const ProjectsCards = () => {
                 PROJECT_CONTAINER_STYLE,
                 {
                   backgroundColor:
-                    project.status === "Finished"
-                      ? "rgba(179, 255, 119, 0.4)"
-                      : project.status === "failed"
+                    project.status === "finished"
+                      ? "rgba(179, 255, 119, 0.4)" :
+                      project.status === "in_progress"
+                      ? "rgba(255, 255, 119, 0.4)"
+                      : !project.validated
                       ? "rgba(255, 119, 119, 0.4)"
-                      : "blue",
+                      : "rgba(255, 255, 119, 0.4)",
                 },
               ]}
             >
-              <Text>{project.name}</Text>
+              <Text>{project.project.name}</Text>
               <Text>{project.status}</Text>
-              <Text>{project.grade}</Text>
+              <Text>{project.final_mark}</Text>
             </View>
           </View>
         );

@@ -8,8 +8,6 @@ const UsersCard = (props) => {
   return (
     <Pressable
       onPress={() => {
-        console.log("on card press");
-        console.log(props);
         navigation.navigate("PublicProfile");
       }}
       style={USER_CARD_STYLE}

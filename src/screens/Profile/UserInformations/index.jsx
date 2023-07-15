@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image } from "react-native";
 import Avatar from "../../../components/atoms/Avatar";
 import { useGetCoalitionQuery } from "../../../Redux/api/apiSlice";
-
+import SelectDropdown from "react-native-select-dropdown";
 
 const ColitionImageUrl =
   "https://cdn.intra.42.fr/coalition/cover/76/Commodore_BG.jpg";
@@ -29,19 +29,51 @@ const addZero = (number) => {
 };
 
 const UserInformations = (props) => {
-  const {data} = props;
+  const {data, cursus, selectedCursus, setSelectedCursus} = props;
   const {data: coalitionData, isLoading: coalitionDataLoading} = useGetCoalitionQuery(data.id);
 
-  console.log("coalitionData", coalitionData[0].image_url, ", coalitionDataLoading", coalitionDataLoading);
-  const [selectedCursus, setSelectedCursus] = useState("42Cursus");
-  const cursusElements = [
+  let cursusElements = [
     {
       label: "Wallet",
       value: `${data?.wallet} ₳`,
     },
     {
       label: "Cursus",
-      value: "42Cursus",
+      value: <SelectDropdown
+      data={cursus?.map((e, index) => (e.cursus.name))}
+      defaultButtonText={selectedCursus?.cursus.name}
+      buttonStyle={{
+        backgroundColor: "transparent",
+        height: 25,
+        width: "80%",
+      }}
+      showsVerticalScrollIndicator={false}
+      buttonTextStyle={{
+        color: "white",
+        fontSize: 12,
+        textAlign: "left",
+      }}
+      dropdownStyle={{
+        position: "absolute",
+        borderRadius: 5,
+      }}
+      rowTextStyle={{
+        // color: "white",
+        fontSize: 13,
+        paddingHorizontal: 10,
+        width: 40,
+        textAlign: "left",
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
+      }}
+      rowStyle={{ borderColor: "transparent", borderWidth: 0 }}
+      onSelect={(selectedItem, index) => {
+        setSelectedCursus(cursus[index])
+      }}
+      buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+      rowTextForSelection={(item, index) => item}
+      dropdownOverlayColor={"transparent"}
+    />,
     },
     {
       label: "Evaluation points",
@@ -49,10 +81,10 @@ const UserInformations = (props) => {
     },
     {
       label: "Grade",
-      value: "Member",
+      value: selectedCursus?.grade ? selectedCursus?.grade : "Novice",
     },
   ];
-  const Level = 13.62;
+  const Level = selectedCursus.level;
   const LevelPercent = `${Level}`.split(".")[1]
     ? addZero(+`${Level}`.split(".")[1])
     : 0;
@@ -63,7 +95,7 @@ const UserInformations = (props) => {
         firstName={data?.displayname.split(" ")[0]}
         lastName={data?.displayname.split(" ")[1]}
         image={{uri: data?.image_url}}
-        style={{ width: 125, height: 125, marginTop: 20 }}
+        style={{ width: 125, height: 125, marginTop: 40 }}
       />
       <View style={NAME_CONTAINER_STYLE}>
         <Text style={FULLNAME_STYLE}>{data?.displayname}</Text>
@@ -74,7 +106,9 @@ const UserInformations = (props) => {
           return (
             <View style={ELEMENT_CHILD_CONTAINER_STYLE} key={index}>
               <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.label}</Text>
-              <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.value}</Text>
+              {
+                element.label === "Cursus" ? element.value : <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.value}</Text>
+              }
             </View>
           );
         })}
@@ -107,7 +141,7 @@ export default UserInformations;
 
 const PUBLIC_PROFILE_USER_STYLE = {
   width: "100%",
-  height: 450,
+  height: 470,
   backgroundColor: "blue",
   alignItems: "center",
 };
@@ -129,7 +163,7 @@ const ELEMENT_CONTAINER_STYLE = {
 
 const ELEMENT_CHILD_CONTAINER_STYLE = {
   backgroundColor: "rgba(69, 69, 69, 0.8)",
-  width: "50%",
+  width: "60%",
   height: 25,
   alignItems: "center",
   paddingLeft: 20,
