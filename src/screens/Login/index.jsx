@@ -14,6 +14,16 @@ import { setCredentials } from "../../Redux/features/auth/authSlice";
 
 WebBrowser.maybeCompleteAuthSession();
 
+const generateRandomString = (length) => {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};
+
 const BackroundImage = () => {
   return (
     <Image
@@ -31,11 +41,8 @@ const BackroundImage = () => {
   );
 };
 const Login = () => {
-  const authData = useSelector((state) => state.auth);
   const [login] = useLoginMutation();
-  const [authCredentials, setAuthCredentials] = useState({});
   const dispatch = useDispatch();
-
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -56,12 +63,18 @@ const Login = () => {
         client_secret: CLIENT_SECRET,
         code: code,
         redirect_uri: REDIRECT_URL,
-        state: "6NjjRGaQQg8TUeyv6NjjRGaQQg8TUeyv",
+        state: generateRandomString(50),
       };
 
       try {
         const result = await login(credentials).unwrap();
-        dispatch(setCredentials({accessToken: result.access_token, refreshToken: result.refresh_token, isAuthenticated: true}))
+        dispatch(
+          setCredentials({
+            accessToken: result.access_token,
+            refreshToken: result.refresh_token,
+            isAuthenticated: true,
+          })
+        );
       } catch (err) {
         console.log("err==>", err);
       }

@@ -12,23 +12,17 @@ const Profile = () => {
   const { data, error, isLoading } = useGetConnetedUserQuery();
   const [cursus, setCursus] = useState(null);
   const [selectedCursus, setSelectedCursus] = useState(null);
-  
-  useEffect(() => {
-    // console.log("data===>", data?.cursus_users.map((el) => el))
-    if (!isLoading) {
-      // console.log("data==>", data.cursus_users[0].cursus.id);
-      setCursus(data?.cursus_users.map((el) => el));
-      // console.log("kikiki==>", data?.cursus_users.map((el) => el)[data?.cursus_users.map((el) => el).length - 1].cursus_id)
-      setSelectedCursus(data?.cursus_users.map((el) => el)[data?.cursus_users.map((el) => el).length - 1]);
-    }
-  }, [isLoading]);
 
   useEffect(() => {
-    if (selectedCursus) {
-      // console.log("projects==>", typeof data?.projects_users[0].cursus_ids[0])
-      // console.log("selectedCursus==>", data?.projects_users.filter((el) => el.cursus_ids[0] === selectedCursus.cursus_id))
+    if (!isLoading) {
+      setCursus(data?.cursus_users.map((el) => el));
+      setSelectedCursus(
+        data?.cursus_users.map((el) => el)[
+          data?.cursus_users.map((el) => el).length - 1
+        ]
+      );
     }
-  }, [selectedCursus]);
+  }, [isLoading]);
 
   return (
     <View style={PUBLIC_PROFILE_CONTAINER}>
@@ -37,11 +31,34 @@ const Profile = () => {
           width: "100%",
         }}
       >
-        {!isLoading && data && cursus && selectedCursus && <UserInformations data={data} setCursus={setCursus} cursus={cursus} selectedCursus={selectedCursus} setSelectedCursus={setSelectedCursus}  />}
+        {!isLoading && data && cursus && selectedCursus && (
+          <UserInformations
+            data={data}
+            setCursus={setCursus}
+            cursus={cursus}
+            selectedCursus={selectedCursus}
+            setSelectedCursus={setSelectedCursus}
+          />
+        )}
         <SplitComponent title={"Projects"} />
-        {!isLoading && selectedCursus && data && <ProjectsCards  projects={data?.projects_users.filter((el) => el.cursus_ids[0] === selectedCursus.cursus_id && el.status === "finished" || el.status === "in_progress" || el.status === "failed")} />}
+        {!isLoading && selectedCursus && data && (
+          <ProjectsCards
+            projects={data?.projects_users.filter(
+              (el) =>
+                (el.cursus_ids[0] === selectedCursus.cursus_id &&
+                  el.status === "finished") ||
+                el.status === "in_progress"
+            )}
+          />
+        )}
         <SplitComponent title={"Skills"} />
-        {!isLoading && selectedCursus && <SkillsInfomration skills={data.cursus_users.filter((el) => el.cursus.id === selectedCursus.cursus_id)} />}
+        {!isLoading && selectedCursus && (
+          <SkillsInfomration
+            skills={data.cursus_users.filter(
+              (el) => el.cursus.id === selectedCursus.cursus_id
+            )}
+          />
+        )}
       </ScrollView>
     </View>
   );

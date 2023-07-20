@@ -2,9 +2,10 @@ import React from "react";
 import { View, TextInput } from "react-native";
 import { SearchIcon } from "../../icons";
 import { FONT_SIZE } from "../../../app.style";
+import { Pressable } from "react-native";
 
 const SearchBar = (props) => {
-  const { onChange } = props;
+  const { onChange, onSearchClick } = props;
   return (
     <View style={SEARCH_CONTAINER_STYLE}>
       <TextInput
@@ -12,9 +13,9 @@ const SearchBar = (props) => {
         style={{ paddingHorizontal: 24 }}
         onChangeText={onChange}
       />
-      <View style={ICON_STYLE}>
+      <Pressable style={ICON_STYLE} onPress={onSearchClick}>
         <SearchIcon />
-      </View>
+      </Pressable>
     </View>
   );
 };
@@ -28,14 +29,9 @@ const SEARCH_CONTAINER_STYLE = {
   borderRadius: 45,
   position: "relative",
   justifyContent: "center",
-  // shadowOffset: {width: 10, height: 10},
-  // shadowColor: 'black',
-  // shadowOpacity: 1,
   elevation: 5,
   marginTop: 103,
   fontSize: FONT_SIZE.sm,
-  // fontFamily: "Poppins-Regular",
-  // background color must be set
 };
 
 const ICON_STYLE = {

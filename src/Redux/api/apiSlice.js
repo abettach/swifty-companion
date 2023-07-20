@@ -5,6 +5,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: `https://api.intra.42.fr`,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
+    console.log("getState ==>", getState());
     const token = getState().auth.accessToken;
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
@@ -37,7 +38,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 };
 
 const UserDataReponseTransform = (response) => {
-  console.log("response ==>", response.id);
   const filtredData = {
     id: response.id,
     campus: response.campus,
@@ -51,7 +51,8 @@ const UserDataReponseTransform = (response) => {
     projects_users: response.projects_users,
     skills: response.skills,
     campus: response.campus[0].name,
-  }
+  };
+  console.log("filtredData ==>", filtredData);
   return filtredData;
 };
 
@@ -60,9 +61,24 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     login: builder.mutation({
-      query: (credentials) => ({
-        url: `https://api.intra.42.fr/oauth/token?grant_type=${credentials.grant_type}&client_id=${credentials.client_id}&client_secret=${credentials.client_secret}&code=${credentials.code}&redirect_uri=${credentials.redirect_uri}&state=${credentials.state}`,
+      query: ({
+        grant_type,
+        client_id,
+        client_secret,
+        code,
+        redirect_uri,
+        state,
+      }) => ({
+        url: `https://api.intra.42.fr/oauth/token`,
         method: "POST",
+        params: {
+          grant_type,
+          client_id,
+          client_secret,
+          code,
+          redirect_uri,
+          state,
+        },
       }),
       transformResponse: (response) => {
         const { access_token, refresh_token } = response;
@@ -72,12 +88,20 @@ export const apiSlice = createApi({
     getConnetedUser: builder.query({
       query: () => `https://api.intra.42.fr/v2/me`,
       transformResponse: UserDataReponseTransform,
-      
-  }),
+    }),
     getCoalition: builder.query({
       query: (id) => `https://api.intra.42.fr/v2/users/${id}/coalitions`,
+    }),
+    getUsersData: builder.query({
+      query: (id) => `https://api.intra.42.fr/v2/users/${id}`,
+      transformResponse: UserDataReponseTransform,
     }),
   }),
 });
 
-export const { useLoginMutation, useGetConnetedUserQuery, useGetCoalitionQuery } = apiSlice;
+export const {
+  useLoginMutation,
+  useGetConnetedUserQuery,
+  useGetCoalitionQuery,
+  useGetUsersDataQuery,
+} = apiSlice;

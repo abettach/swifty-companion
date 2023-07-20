@@ -3,6 +3,7 @@ import { View, Text, Image } from "react-native";
 import Avatar from "../../../components/atoms/Avatar";
 import { useGetCoalitionQuery } from "../../../Redux/api/apiSlice";
 import SelectDropdown from "react-native-select-dropdown";
+import { ArrowIcon } from "../../../components/icons";
 
 const ColitionImageUrl =
   "https://cdn.intra.42.fr/coalition/cover/76/Commodore_BG.jpg";
@@ -29,8 +30,9 @@ const addZero = (number) => {
 };
 
 const UserInformations = (props) => {
-  const {data, cursus, selectedCursus, setSelectedCursus} = props;
-  const {data: coalitionData, isLoading: coalitionDataLoading} = useGetCoalitionQuery(data.id);
+  const { data, cursus, selectedCursus, setSelectedCursus } = props;
+  const { data: coalitionData, isLoading: coalitionDataLoading } =
+    useGetCoalitionQuery(data.id);
 
   let cursusElements = [
     {
@@ -39,41 +41,44 @@ const UserInformations = (props) => {
     },
     {
       label: "Cursus",
-      value: <SelectDropdown
-      data={cursus?.map((e, index) => (e.cursus.name))}
-      defaultButtonText={selectedCursus?.cursus.name}
-      buttonStyle={{
-        backgroundColor: "transparent",
-        height: 25,
-        width: "80%",
-      }}
-      showsVerticalScrollIndicator={false}
-      buttonTextStyle={{
-        color: "white",
-        fontSize: 12,
-        textAlign: "left",
-      }}
-      dropdownStyle={{
-        position: "absolute",
-        borderRadius: 5,
-      }}
-      rowTextStyle={{
-        // color: "white",
-        fontSize: 13,
-        paddingHorizontal: 10,
-        width: 40,
-        textAlign: "left",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-      }}
-      rowStyle={{ borderColor: "transparent", borderWidth: 0 }}
-      onSelect={(selectedItem, index) => {
-        setSelectedCursus(cursus[index])
-      }}
-      buttonTextAfterSelection={(selectedItem, index) => selectedItem}
-      rowTextForSelection={(item, index) => item}
-      dropdownOverlayColor={"transparent"}
-    />,
+      value: (
+        <SelectDropdown
+          data={cursus?.map((e, index) => e.cursus.name)}
+          defaultButtonText={selectedCursus?.cursus.name}
+          buttonStyle={{
+            backgroundColor: "transparent",
+            height: 25,
+            width: "80%",
+          }}
+          showsVerticalScrollIndicator={false}
+          buttonTextStyle={{
+            color: "white",
+            fontSize: 12,
+            textAlign: "left",
+            position: "relative",
+          }}
+          dropdownStyle={{
+            position: "absolute",
+            borderRadius: 5,
+          }}
+          rowTextStyle={{
+            // color: "white",
+            fontSize: 13,
+            paddingHorizontal: 10,
+            width: 40,
+            textAlign: "left",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+          }}
+          rowStyle={{ borderColor: "transparent", borderWidth: 0 }}
+          onSelect={(selectedItem, index) => {
+            setSelectedCursus(cursus[index]);
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+          rowTextForSelection={(item, index) => item}
+          dropdownOverlayColor={"transparent"}
+        />
+      ),
     },
     {
       label: "Evaluation points",
@@ -90,11 +95,13 @@ const UserInformations = (props) => {
     : 0;
   return (
     <View style={PUBLIC_PROFILE_USER_STYLE}>
-      {!coalitionDataLoading && <ColitionImage image={{uri: coalitionData[0].cover_url}} />}
+      {!coalitionDataLoading && (
+        <ColitionImage image={{ uri: coalitionData[0].cover_url }} />
+      )}
       <Avatar
         firstName={data?.displayname.split(" ")[0]}
         lastName={data?.displayname.split(" ")[1]}
-        image={{uri: data?.image_url}}
+        image={{ uri: data?.image_url }}
         style={{ width: 125, height: 125, marginTop: 40 }}
       />
       <View style={NAME_CONTAINER_STYLE}>
@@ -105,10 +112,29 @@ const UserInformations = (props) => {
         {cursusElements.map((element, index) => {
           return (
             <View style={ELEMENT_CHILD_CONTAINER_STYLE} key={index}>
-              <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.label}</Text>
-              {
-                element.label === "Cursus" ? element.value : <Text style={ELEMENT_CHILD_TEXT_STYLE}>{element.value}</Text>
-              }
+              <Text
+                style={[
+                  ELEMENT_CHILD_TEXT_STYLE,
+                  element.label === "Cursus" && { flex: 0 },
+                ]}
+              >
+                {element.label}
+              </Text>
+              {element.label === "Cursus" ? (
+                element.value
+              ) : (
+                <Text style={[ELEMENT_CHILD_TEXT_STYLE]}>{element.value}</Text>
+              )}
+              {element.label === "Cursus" && (
+                <ArrowIcon
+                  style={{
+                    position: "absolute",
+                    right: "5%",
+                  }}
+                  width={10}
+                  height={100}
+                />
+              )}
             </View>
           );
         })}
@@ -120,7 +146,7 @@ const UserInformations = (props) => {
           justifyContent: "center",
         }}
       >
-        <Text style={[ELEMENT_CHILD_TEXT_STYLE, { marginTop: 40 }]}>
+        <Text style={[ELEMENT_CHILD_TEXT_STYLE, { marginTop: 40, flex: 0 }]}>
           {data?.email}
         </Text>
         <View style={PROGRESSIVE_BAR_STYLE}>
@@ -129,7 +155,7 @@ const UserInformations = (props) => {
           />
           <Text style={[LEVEL_TEXT_STYLE]}>{`${Level} %`}</Text>
         </View>
-        <Text style={[ELEMENT_CHILD_TEXT_STYLE, { marginTop: 15 }]}>
+        <Text style={[ELEMENT_CHILD_TEXT_STYLE, { marginTop: 15, flex: 0 }]}>
           {data?.campus}
         </Text>
       </View>
@@ -177,6 +203,7 @@ const ELEMENT_CHILD_TEXT_STYLE = {
   fontWeight: 600,
   fontSize: 12,
   marginRight: 20,
+  flex: 1,
 };
 
 const PROGRESSIVE_BAR_STYLE = {

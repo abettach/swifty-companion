@@ -7,7 +7,7 @@ import { HouseIcon } from "../../components/icons";
 import { PersonIcon } from "../../components/icons";
 import { View, Text } from "react-native";
 import StaticString from "../../utils/staticStrings.json";
-import { FONT_FAMILY, FONT_SIZE, COLORS } from "../../app.style";
+import { FONT_SIZE, COLORS } from "../../app.style";
 import { createStackNavigator } from "@react-navigation/stack";
 import PublicProfile from "../../screens/PublicProfile";
 import Login from "../../screens/Login";
@@ -103,7 +103,6 @@ export const AuthStack = () => {
 export default UserStack;
 
 const TAB_BAR_STYLE = {
-  // backgroundColor: "white",
   backgroundColor: "red",
   borderColor: "black",
   margin: 0,
@@ -135,9 +134,7 @@ const TAB_BAR_LABEL_CONTAINER = {
 
 const TAB_BAR_LABEL_TEXT = {
   position: "relative",
-  // bottom: 0,
   fontSize: FONT_SIZE.sm,
-  // fontFamily: "Poppins-SemiBold",
 };
 
 const CIRCLE = {

@@ -1,86 +1,47 @@
 import React from "react";
 import { View, Text } from "react-native";
-const ProjectsCards = () => {
-  const projects = [
-    {
-      name: "Libft",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "Get_Next_Line",
-      status: "failed",
-      grade: "100%",
-    },
-    {
-      name: "Printf",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-    {
-      name: "NetPractice",
-      status: "Finished",
-      grade: "100%",
-    },
-  ];
+const ProjectsCards = (props) => {
+  const { projects } = props;
+  // console.log("projects==>", projects);
+
   return (
     <>
-      {projects.map((project, index) => {
-        return (
-          <View
-            style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: index === projects.length - 1 ? 20 : 0,
-            }}
-            key={index}
-          >
+      {projects
+        .filter((project) => !project.project.parent_id)
+        .map((project, index) => {
+          return (
             <View
-              style={[
-                PROJECT_CONTAINER_STYLE,
-                {
-                  backgroundColor:
-                    project.status === "Finished"
-                      ? "rgba(179, 255, 119, 0.4)"
-                      : project.status === "failed"
-                      ? "rgba(255, 119, 119, 0.4)"
-                      : "blue",
-                },
-              ]}
+              style={{
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: index === projects.length - 1 ? 20 : 0,
+              }}
+              key={Math.random() * 10}
             >
-              <Text>{project.name}</Text>
-              <Text>{project.status}</Text>
-              <Text>{project.grade}</Text>
+              <View
+                style={[
+                  PROJECT_CONTAINER_STYLE,
+                  {
+                    backgroundColor:
+                      project.status === "finished" &&
+                      project["validated?"] === true
+                        ? "rgba(179, 255, 119, 0.4)"
+                        : project.status === "in_progress"
+                        ? "rgba(255, 255, 119, 0.4)"
+                        : !project.validated
+                        ? "rgba(255, 119, 119, 0.4)"
+                        : "rgba(255, 255, 119, 0.4)",
+                  },
+                ]}
+              >
+                <Text style={{ flex: 9 }}>{project.project.name}</Text>
+                <Text style={{ flex: 6 }}>{project.status}</Text>
+                <Text style={{ flex: 1 }}>{project.final_mark}</Text>
+              </View>
             </View>
-          </View>
-        );
-      })}
+          );
+        })}
     </>
   );
 };

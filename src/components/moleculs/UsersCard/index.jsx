@@ -2,33 +2,48 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { FONT_SIZE } from "../../../app.style";
 import Avatar from "../../atoms/Avatar";
+import { useGetUsersDataQuery } from "../../../Redux/api/apiSlice";
 
 const UsersCard = (props) => {
-  const { fullName, login, image, navigation } = props;
+  const { navigation, search } = props;
+  console.log("search: ", search);
+  const { data, isLoading } = useGetUsersDataQuery(search, {
+    skip: !search,
+    refetchOnMountOrArgChange: search,
+  });
+
   return (
-    <Pressable
-      onPress={() => {
-        navigation.navigate("PublicProfile");
-      }}
-      style={USER_CARD_STYLE}
-    >
-      <Avatar
-        firstName={fullName}
-        lastName={fullName}
-        style={{
-          width: 60,
-          height: 60,
-          backgroundColor: "transparent",
-          marginLeft: 17,
-          marginRight: 10,
-        }}
-        image={image}
-      />
-      <View style={CARD_TEXT_CONTAINER}>
-        <Text style={CARD_NAME_STYLE}>{fullName}</Text>
-        <Text style={CATD_LOGIN_STYLE}>{login}</Text>
-      </View>
-    </Pressable>
+    <>
+      {!isLoading && (
+        <Pressable
+          onPress={() => {
+            navigation.navigate("PublicProfile", {
+              data: data,
+              isLoading: isLoading,
+              title: data?.displayname,
+            });
+          }}
+          style={USER_CARD_STYLE}
+        >
+          <Avatar
+            firstName={data?.displayname?.split(" ")[0]}
+            lastName={data?.displayname?.split(" ")[1]}
+            style={{
+              width: 60,
+              height: 60,
+              backgroundColor: "transparent",
+              marginLeft: 17,
+              marginRight: 10,
+            }}
+            image={{ uri: data?.image_url }}
+          />
+          <View style={CARD_TEXT_CONTAINER}>
+            <Text style={CARD_NAME_STYLE}>{data?.displayname}</Text>
+            <Text style={CATD_LOGIN_STYLE}>{data?.login}</Text>
+          </View>
+        </Pressable>
+      )}
+    </>
   );
 };
 
